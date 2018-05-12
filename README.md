@@ -29,7 +29,7 @@ The JSON pattern files must contain the following:
 
 The file can contain:
 
-```"extensions":[]```, a list containing the accepted file extensions (```".txt"```, ```".md"``` etc.);
+```"extensions":[]```, a list containing the accepted file extensions (```"txt"```, ```"md"``` etc.);
 
 ```"line_size_range":[]```, a list containing one or two unsigned integers representing the maximum line length or the minimum and maximum respectively;
 
