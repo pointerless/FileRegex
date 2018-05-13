@@ -97,26 +97,30 @@ class FileRegex{
                     return false;
                 }
             }
-            
 
             bool matches = false;
 
-            const auto filnmsplt = strSplit(filename, '.');    //Match file extension      
-            for(const std::string& ext : this->validextensions){
-                if(filnmsplt[filnmsplt.size()-1] == ext){
-                    matches = true;
-                    break;
+            if(this->validextensions.size() > 0){
+                const auto filnmsplt = strSplit(filename, '.');    //Match file extension      
+                for(const std::string& ext : this->validextensions){
+                    if(filnmsplt[filnmsplt.size()-1] == ext){
+                        matches = true;
+                        break;
+                    }
                 }
+                if(!matches){ return false; }
+            }else{
+                matches = true;
             }
-            if(!matches){ return false; }
-
 
             std::ifstream file(filename);
             std::string line;
             std::size_t linecount = 0;
             while(getline(file, line)){
-                if(line.size() < this->minlength || line.size() > this->maxlength){
-                    return false;
+                if(this->maxlength !=0){
+                    if(line.size() < this->minlength || line.size() > this->maxlength){
+                        return false;
+                    }
                 }
                 if(!include_blank && line.size() == 0){ continue; }
                 switch(type){
@@ -151,8 +155,10 @@ class FileRegex{
                 if(!matches){ return false; }
                 linecount++;
             }
-            if(linecount < this->minlines || linecount > this->maxlines){
-                return false;
+            if(this->maxlines > 0){
+                if(linecount < this->minlines || linecount > this->maxlines){
+                    return false;
+                }
             }
             return true;
         }
@@ -168,45 +174,47 @@ class FileRegex{
                     return false;
                 }
             }
-            
 
             bool matches = false;
 
-            const auto filnmsplt = strSplit(filename, '.');    //Match file extension      
-            for(const std::string& ext : this->validextensions){
-                if(filnmsplt[filnmsplt.size()-1] == ext){
-                    matches = true;
-                    break;
+            if(this->validextensions.size() > 0){
+                const auto filnmsplt = strSplit(filename, '.');    //Match file extension      
+                for(const std::string& ext : this->validextensions){
+                    if(filnmsplt[filnmsplt.size()-1] == ext){
+                        matches = true;
+                        break;
+                    }
                 }
+                if(!matches){ return false; }
+            }else{
+                matches = true;
             }
-            if(!matches){ return false; }
-
 
             std::stringstream file;
             file << str;
             std::string line;
             std::size_t linecount = 0;
-            std::size_t linepos = 0;
             while(getline(file, line)){
-                std::cout << line << std::endl;
-                if(line.size() < this->minlength || line.size() > this->maxlength){
-                    return false;
+                if(this->maxlength !=0){
+                    if(line.size() < this->minlength || line.size() > this->maxlength){
+                        return false;
+                    }
                 }
                 if(!include_blank && line.size() == 0){ continue; }
                 switch(type){
                     case FileRegexType::Exact:{
-                        if(linepos == this->linepatterns.size()){ 
+                        if(linecount == this->linepatterns.size()){ 
                             matches = false; 
-                        }else if(!std::regex_match(line, this->linepatterns[linepos])){
+                        }else if(!std::regex_match(line, this->linepatterns[linecount])){
                             matches = false;
                         }
                         break;
                     }
                     case FileRegexType::Repeated:{
-                        if(linepos == this->linepatterns.size()){
-                            linepos = 0;
+                        if(linecount == this->linepatterns.size()){
+                            linecount = 0;
                         }
-                        if(!std::regex_match(line, this->linepatterns[linepos])){
+                        if(!std::regex_match(line, this->linepatterns[linecount])){
                             matches = false;
                         }
                         break;
@@ -224,10 +232,11 @@ class FileRegex{
                 }
                 if(!matches){ return false; }
                 linecount++;
-                linepos++;
             }
-            if(linecount < this->minlines || linecount > this->maxlines){
-                return false;
+            if(this->maxlines > 0){
+                if(linecount < this->minlines || linecount > this->maxlines){
+                    return false;
+                }
             }
             return true;
         }
@@ -247,8 +256,8 @@ class FileRegex{
         FileRegexType type;
         std::vector<std::string> validextensions;
         std::vector<std::regex> linepatterns;
-        unsigned int minlines; unsigned int maxlines;
-        unsigned int minlength; unsigned int maxlength;
+        unsigned int minlines = 0; unsigned int maxlines = 0;
+        unsigned int minlength = 0; unsigned int maxlength = 0;
         std::vector<std::regex> alwaysmatch;
         std::vector<std::regex> alwaysnotmatch;
         bool include_blank;
