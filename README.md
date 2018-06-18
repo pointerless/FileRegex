@@ -11,7 +11,7 @@ This header only library is used to match raw files or strings to patterns using
 
 and more are coming!
 
-## Reqiurements ##
+## Requirements ##
 
 This library uses [JSON for Modern C++](https://github.com/nlohmann/json/) to parse the pattern files. This needs to be installed or the include path ```<nlohmann/json.hpp>``` must resolve correctly.
 
