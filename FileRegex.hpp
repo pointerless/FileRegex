@@ -16,7 +16,7 @@ enum class FileRegexType {
 
 class FileRegex {
 	public:
-		FileRegex(const std::string filename){
+		explicit FileRegex(const std::string& filename){
 			std::ifstream file(filename);
 			std::string file_str((std::istreambuf_iterator<char>(file)),
 			                     std::istreambuf_iterator<char>());
@@ -87,7 +87,7 @@ class FileRegex {
 			}
 		}
 
-		bool matchRawFile(const std::string filename) const{
+		bool matchRawFile(const std::string& filename) const{
 			for(const std::regex &inc : this->alwaysmatch){        //Check if always match
 				if(std::regex_match(filename, inc)){
 					return true;
@@ -166,7 +166,7 @@ class FileRegex {
 			return true;
 		}
 
-		bool matchString(const std::string str, const std::string filename) const{
+		bool matchString(const std::string& str, const std::string& filename) const{
 			for(const std::regex &inc : this->alwaysmatch){        //Check if always match
 				if(std::regex_match(filename, inc)){
 					return true;
